@@ -23,10 +23,10 @@ public:
     vector<Item> items;
     function<void()> on_arrival; // Use std::function instead of function pointer
 
-    Location(const string n, const string d) : name(n), desc(d), arrival_set(false) {}
+    Location(const string n, const string d) : arrival_set(false), name(n), desc(d) {}
 
     Location(const string n, const string d, function<void()> f)
-            : name(n), desc(d), on_arrival(f), arrival_set(true) {}
+            : arrival_set(true), name(n), desc(d), on_arrival(f)  {}
 
     Location go(const string locName) {
         for (Location* loc : children) {

@@ -1,13 +1,14 @@
 all: main
 
 CXX = g++
-override CXXFLAGS += -g -Wmost -Werror
+override CXXFLAGS += -g -Wmost -Werror -std=c++17
 
-SRCS = $(shell find . -name '.ccls-cache' -std=c++11 -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
+SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
 HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.h' -print)
 
 main: $(SRCS) $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(SRCS) -o "$@"
+	./$@
 
 main-debug: $(SRCS) $(HEADERS)
 	$(CXX) $(CXXFLAGS) -U_FORTIFY_SOURCE -O0 $(SRCS) -o "$@"
