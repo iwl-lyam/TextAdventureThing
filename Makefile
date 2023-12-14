@@ -8,7 +8,6 @@ HEADERS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.
 
 main: $(SRCS) $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(SRCS) -o "$@"
-	./$@
 
 main-debug: $(SRCS) $(HEADERS)
 	$(CXX) $(CXXFLAGS) -U_FORTIFY_SOURCE -O0 $(SRCS) -o "$@"

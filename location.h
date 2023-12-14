@@ -20,7 +20,7 @@ public:
     string name;
     string desc;
     vector<Location*> children;
-    vector<Item> items;
+    vector<Item*> items;
     function<void()> on_arrival; // Use std::function instead of function pointer
 
     Location(const string n, const string d) : arrival_set(false), name(n), desc(d) {}
@@ -65,7 +65,7 @@ public:
         return children;
     }
 
-    vector<Item> add_item(Item loc) {
+    vector<Item*> add_item(Item* loc) {
         items.push_back(loc);
         return items;
     }

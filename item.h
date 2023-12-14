@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <utility>
 
 using namespace std;
 
@@ -15,18 +16,16 @@ public:
 
     string name;
     string desc;
-    string clue;
-    string password;
-    string correct;
-    string incorrect;
+    bool used;
 
-    Item(string n, string d, string c, string p, string co, string ic) {
-        name = n;
-        desc = d;
-        clue = c;
-        password = p;
-        correct = co;
-        incorrect = ic;
+    Item(string n, string d) {
+        name = std::move(n);
+        desc = std::move(d);
+        used = false;
+    }
+
+    void use() {
+        used = true;
     }
 };
 

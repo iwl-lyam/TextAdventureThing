@@ -1,9 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <chrono>
 #include <thread>
-#include <functional>
 
 #include "item.h"
 #include "location.h"
@@ -39,6 +37,8 @@ int main() {
         cout << "Should've read the sign." << endl;
     });
 
+
+
     hub.add_loc(&library);
     hub.add_loc(&cafeteria);
     hub.add_loc(&maincorridor);
@@ -64,7 +64,6 @@ int main() {
 
     Location current_room = hub;
 
-
     while (true) {
         cout << "-----------------------------------" << endl;
         cout << "You are currently in: " << current_room.name << endl << current_room.desc << endl << endl << "Would you like to view the items (input 1) or possible locations (input 2)? ";
@@ -86,6 +85,12 @@ int main() {
 
             current_room.arrival();
 
+        } else if (input == "1") {
+            cout << "Possible items:" << endl;
+
+            for (Item *it: current_room.items)
+                if (!it->used)
+                    cout << "    - " << it->name << endl;
         }
 
         cout << endl;
