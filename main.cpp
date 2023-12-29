@@ -43,10 +43,13 @@ int main() {
         cout << "Should've read the sign." << endl;
     });
 
+    Item bat("Bat", "You can swing at things and probably break them.");
+
     hub.add_loc(&library);
     hub.add_loc(&cafeteria);
     hub.add_loc(&maincorridor);
     hub.add_loc(&maintenanceshaft);
+    hub.add_item(&bat);
 
     maincorridor.add_loc(&controlroom);
     maincorridor.add_loc(&dorms);
@@ -84,7 +87,7 @@ int main() {
                 cout << "    - " << loc->name << endl;
 
             string nextLoc;
-            cout << "Where do you want to go? ";
+            cout << "Where do you want to go? Leave blank to cancel. ";
             getline(cin, nextLoc);
             string res = current_room.go(nextLoc, &current_room);
             cout << res << endl << endl;
@@ -100,17 +103,26 @@ int main() {
                     cout << "    - " << it->name << endl;
 
             string item_n;
-            cout << "Where do you want to go? ";
+            cout << "Which item do you want to add? Leave blank to cancel. ";
             getline(cin, item_n);
             pickUp(item_n, current_room, &inventory);
+            if (!item_n.empty()) {
+                cout << "Picking up..." << endl;
+                sleep_for(1s);
+            }
         } else if (input == "3") {
             cout << "Your current stats:" << endl << endl;
+            sleep_for(1s);
             cout << " Your inventory:" << endl;
 
             for (Item it: inventory)
                 cout << "    - " << it.name << endl;
 
-            cout << endl << " Your current location:" << current_room.name << endl;
+            sleep_for(1s);
+
+            cout << endl << " Your current location: " << current_room.name << endl;
+
+            sleep_for(2s);
         }
 
         cout << endl;

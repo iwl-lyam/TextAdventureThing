@@ -1,4 +1,5 @@
 all: main
+	./main
 
 CXX = g++
 override CXXFLAGS += -g -Werror -std=c++17
