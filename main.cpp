@@ -1,3 +1,7 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "LoopDoesntUseConditionVariableInspection"
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -6,6 +10,8 @@
 #include "item.h"
 #include "location.h"
 
+using namespace item;
+using namespace location;
 using namespace std;
 using namespace this_thread; // sleep_for, sleep_until
 using namespace chrono;
@@ -37,8 +43,6 @@ int main() {
         cout << "Should've read the sign." << endl;
     });
 
-
-
     hub.add_loc(&library);
     hub.add_loc(&cafeteria);
     hub.add_loc(&maincorridor);
@@ -63,10 +67,13 @@ int main() {
     library.add_loc(&cafeteria);
 
     Location current_room = hub;
+    vector<Item> inventory;
 
-    while (true) {
+    bool complete = false;
+
+    while (!complete) {
         cout << "-----------------------------------" << endl;
-        cout << "You are currently in: " << current_room.name << endl << current_room.desc << endl << endl << "Would you like to view the items (input 1) or possible locations (input 2)? ";
+        cout << "You are currently in: " << current_room.name << endl << current_room.desc << endl << endl << "Would you like to view the items (input 1), possible locations (input 2), or current information (input 3)? ";
         string input;
         getline(cin, input);
 
@@ -91,8 +98,23 @@ int main() {
             for (Item *it: current_room.items)
                 if (!it->used)
                     cout << "    - " << it->name << endl;
+
+            string item_n;
+            cout << "Where do you want to go? ";
+            getline(cin, item_n);
+            pickUp(item_n, current_room, &inventory);
+        } else if (input == "3") {
+            cout << "Your current stats:" << endl << endl;
+            cout << " Your inventory:" << endl;
+
+            for (Item it: inventory)
+                cout << "    - " << it.name << endl;
+
+            cout << endl << " Your current location:" << current_room.name << endl;
         }
 
         cout << endl;
     }
 }
+#pragma clang diagnostic pop
+#pragma clang diagnostic pop
