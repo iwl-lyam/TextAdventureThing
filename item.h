@@ -2,6 +2,9 @@
 // Created by Lyam Mosnier on 13/12/2023.
 //
 
+#ifndef TEXTADVENTURETHING_ITEM_H
+#define TEXTADVENTURETHING_ITEM_H
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -11,9 +14,6 @@ class Location;  // Forward declaration
 }
 
 using namespace std;
-
-#ifndef TEXTADVENTURETHING_ITEM_H
-#define TEXTADVENTURETHING_ITEM_H
 
 //class Item {
 //public:

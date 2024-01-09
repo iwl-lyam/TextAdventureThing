@@ -43,6 +43,7 @@ int main() {
         cout << "Should've read the sign." << endl;
     });
 
+    
     Item bat("Bat", "You can swing at things and probably break them.");
 
     hub.add_loc(&library);
@@ -76,7 +77,7 @@ int main() {
 
     while (!complete) {
         cout << "-----------------------------------" << endl;
-        cout << "You are currently in: " << current_room.name << endl << current_room.desc << endl << endl << "Would you like to view the items (input 1), possible locations (input 2), or current information (input 3)? ";
+        cout << "You are currently in: " << current_room.name << endl << current_room.desc << endl << endl << "Would you like to view the items (input 1), possible locations (input 2), current information (input 3), or use an item in your inventory (input 4)? ";
         string input;
         getline(cin, input);
 
