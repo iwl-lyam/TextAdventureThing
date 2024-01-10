@@ -23,27 +23,35 @@ int main() {
     });
     Location cafeteria("Cafeteria", "A room with food", [](){
         cout << "Lots of food, what do you eat first?" << endl;
-    });
+    }, true);
     Location library("Library", "Enjoy a good book", [](){
         cout << "Je pense que lire est interessant, mais je ne parle d'anglais donc je ne peux pas parler de ca!!" << endl;
-    });
+    }, true);
     Location controlroom("Control room", "A room only for the most experienced of astronauts", [](){
         cout << "You look around, and instead of seeing dials and gauges, you see offices. How perculiar." << endl;
-    });
+    }, true);
     Location maincorridor("Corridor", "A corridor. That's it", [](){
         cout << "Wow. Another corridor...." << endl;
-    });
+    }, true);
     Location maintenanceshaft("Maintenance shaft", "Used by engineers to access the engines", [](){
         cout << "Dust everywhere. I don't think anyone's been down here for years." << endl;
-    });
+    }, true);
     Location dorms("Dormitory", "Where people... sleep", [](){
         cout << "Better be quiet here." << endl;
-    });
+    }, true);
     Location engines("Engine room", "Don't enter without ear protection, trust me.", [](){
         cout << "Should've read the sign." << endl;
-    });
+    }, true);
 
-    Item bat("Bat", "You can swing at things and probably break them.");
+    Item bat("Bat", "You can swing at things and probably break them.", [&library]() -> bool{
+        cout << "You look around. You see a door saying 'Library', and you go towards it." << endl;
+        sleep_for(500ms);
+        cout << "You swing at the lock, and it rebounds." << endl;
+        sleep_for(1s);
+        cout << "You swing again, and it smashes. Don't question the physics on that.";
+        library.blocked = false;
+        return true;
+    }, {"Hub"});
 
     hub.add_loc(&library);
     hub.add_loc(&cafeteria);
@@ -76,15 +84,20 @@ int main() {
 
     while (!complete) {
         cout << "-----------------------------------" << endl;
-        cout << "You are currently in: " << current_room.name << endl << current_room.desc << endl << endl << "Would you like to view the items (input 1), possible locations (input 2), or current information (input 3)? ";
+        cout << "You are currently in: " << current_room.name << endl << current_room.desc << endl << endl << "Would you like to view the items (input 1), view possible locations (input 2), use an item (input 3), or  view your current stats (input 4)? ";
         string input;
         getline(cin, input);
 
         if (input == "2") {
             cout << "Possible locations:" << endl;
 
-            for (Location *loc: current_room.children)
-                cout << "    - " << loc->name << endl;
+            for (Location *loc: current_room.children) {
+                cout << "    - " << loc->name;
+                if (loc->blocked) {
+                    cout << " (blocked)";
+                }
+                cout << endl;
+            }
 
             string nextLoc;
             cout << "Where do you want to go? Leave blank to cancel. ";
@@ -92,9 +105,6 @@ int main() {
             string res = current_room.go(nextLoc, &current_room);
             cout << res << endl << endl;
             sleep_for(1s);
-
-            current_room.arrival();
-
         } else if (input == "1") {
             cout << "Possible items:" << endl;
 
@@ -110,7 +120,7 @@ int main() {
                 cout << "Picking up..." << endl;
                 sleep_for(1s);
             }
-        } else if (input == "3") {
+        } else if (input == "4") {
             cout << "Your current stats:" << endl << endl;
             sleep_for(1s);
             cout << " Your inventory:" << endl;
@@ -123,6 +133,28 @@ int main() {
             cout << endl << " Your current location: " << current_room.name << endl;
 
             sleep_for(2s);
+        } else if (input == "3") {
+            cout << " Your inventory:" << endl;
+
+            for (Item it: inventory)
+                cout << "    - " << it.name << endl;
+
+            string item_n;
+            cout << "Which item do you want to add? Leave blank to cancel. ";
+            getline(cin, item_n);
+
+            for (Item it: inventory) {
+                if (it.name == item_n) {
+                    bool useable = it.use(current_room);
+                    if (!useable) {
+                        cout << "You can't use that here." << endl;
+                        sleep_for(1s);
+                    }
+                }
+            }
+
+        } else {
+            cout << "Please enter a valid input." << endl;
         }
 
         cout << endl;

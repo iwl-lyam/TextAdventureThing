@@ -6,17 +6,27 @@
 #include <functional> // Add this include for std::function
 #include <string>     // Add this include for std::string
 #include <vector>     // Add this include for std::vector
+#include <thread>
+
+using namespace std::chrono;
+using std::chrono::system_clock;
+using namespace std::this_thread; // sleep_for, sleep_until
+
 
 using namespace location;
 
 Location::Location(const std::string n, const std::string d) : arrival_set(false), name(n), desc(d) {}
 Location::Location(const std::string n, const std::string d, std::function<void()> f)
             : arrival_set(true), name(n), desc(d), on_arrival(f)  {}
+Location::Location(const std::string n, const std::string d, std::function<void()> f, bool b)
+        : arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b)  {}
 
 Location Location::go(const std::string locName) {
     for (Location* loc : children) {
-        if (loc->name == locName)
+        if (loc->name == locName) {
+            loc->arrival();
             return *loc;
+        }
     }
     return children.empty() ? *this : *children.at(0);
 }
@@ -34,12 +44,23 @@ void Location::arrival() const {
     }
 }
 
+void Location::unblock() {
+    blocked = false;
+}
+
+void Location::block() {
+    blocked = true;
+}
+
 std::string Location::go(const std::string locName, Location* current) {
     std::string init = current->name;
     for (Location* loc : children) {
-        if (loc->name == locName) {
+        if ((loc->name == locName && loc->blocked == false)) {
             *current = *loc;
-            return "Moving to " + loc->name + "...";
+            std::cout << "Moving to " + loc->name + "..." << std::endl;
+            loc->arrival();
+            sleep_for(1s);
+            return "Successfully moved to "+locName;
         }
     }
     return "You can't go there.";

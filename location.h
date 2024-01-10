@@ -23,16 +23,21 @@ namespace location {
         std::string desc;
         std::vector<Location*> children;
         std::vector<item::Item*> items;
+        bool blocked;
         std::function<void()> on_arrival;
 
         Location(const std::string n, const std::string d);
         Location(const std::string n, const std::string d, std::function<void()> f);
+        Location(const std::string n, const std::string d, std::function<void()> f, bool b);
 
         Location go(const std::string locName);
         std::string go(const std::string locName, Location* current);
 
         void setArrival(std::function<void()> f);
         void arrival() const;
+
+        void unblock();
+        void block();
 
         std::vector<Location*> add_loc(Location* loc);
         std::vector<item::Item*> add_item(item::Item* loc);
