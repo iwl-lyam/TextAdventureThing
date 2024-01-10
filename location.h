@@ -2,6 +2,9 @@
 // Created by Lyam Mosnier on 13/12/2023.
 //
 
+#ifndef TEXTADVENTURETHING_LOCATION_H
+#define TEXTADVENTURETHING_LOCATION_H
+
 #include <vector>
 #include <functional>
 #include <string>
@@ -9,9 +12,6 @@
 namespace item {
 class Item;  // Forward declaration
 }
-
-#ifndef TEXTADVENTURETHING_LOCATION_H
-#define TEXTADVENTURETHING_LOCATION_H
 
 namespace location {
     class Location {
