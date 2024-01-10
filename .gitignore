@@ -5,3 +5,4 @@ main
 replit.nix
 .ccls-cache
 main.dSYM
+.idea
