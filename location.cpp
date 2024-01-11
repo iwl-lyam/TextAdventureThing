@@ -16,10 +16,14 @@ using namespace std::this_thread; // sleep_for, sleep_until
 using namespace location;
 
 Location::Location(const std::string n, const std::string d) : arrival_set(false), name(n), desc(d) {}
-Location::Location(const std::string n, const std::string d, std::function<void()> f)
+Location::Location(const std::string n, const std::string d, std::function<bool()> f)
             : arrival_set(true), name(n), desc(d), on_arrival(f)  {}
-Location::Location(const std::string n, const std::string d, std::function<void()> f, bool b)
-        : arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b)  {}
+Location::Location(const std::string n, const std::string d, std::function<bool()> f, bool b, float c)
+        : arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b), code(c)  {}
+Location::Location(const std::string n, const std::string d, std::function<bool()> f, bool b)
+: arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b)  {}
+Location::Location(const std::string n, const std::string d, std::function<bool()> f, float c)
+: arrival_set(true), name(n), desc(d), on_arrival(f), code(c)  {}
 
 Location Location::go(const std::string locName) {
     for (Location* loc : children) {
@@ -31,14 +35,14 @@ Location Location::go(const std::string locName) {
     return children.empty() ? *this : *children.at(0);
 }
 
-void Location::setArrival(std::function<void()> f) {
+void Location::setArrival(std::function<bool()> f) {
     on_arrival = f;
     arrival_set = true;
 }
 
-void Location::arrival() const {
+bool Location::arrival() const {
     if (arrival_set) {
-        on_arrival();
+        return on_arrival();
     } else {
         throw std::runtime_error("Arrival function not set");
     }
@@ -56,11 +60,15 @@ std::string Location::go(const std::string locName, Location* current) {
     std::string init = current->name;
     for (Location* loc : children) {
         if ((loc->name == locName && loc->blocked == false)) {
-            *current = *loc;
+            
             std::cout << "Moving to " + loc->name + "..." << std::endl;
-            loc->arrival();
-            sleep_for(1s);
-            return "Successfully moved to "+locName;
+            if (loc->arrival()) {
+              sleep_for(1s);
+              *current = *loc;
+              return "Successfully moved to "+locName;
+            } else {
+              return "Failed to move to "+locName;
+            }
         }
     }
     return "You can't go there.";

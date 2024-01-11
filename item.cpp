@@ -10,7 +10,7 @@
 //        desc = std::move(d);
 //        used = false;
 //    }
-//};
+//};  
 
 #include "item.h"
 #include "location.h"

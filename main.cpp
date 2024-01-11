@@ -18,29 +18,45 @@ using namespace chrono;
 using chrono::system_clock;
 
 int main() {
-    Location hub("Hub", "Center room connecting to other parts of the spaceship", [](){
+    Location hub("Hub", "Center room connecting to other parts of the spaceship", []() -> bool {
         cout << "Where to go?" << endl;
+        return true;
     });
-    Location cafeteria("Cafeteria", "A room with food", [](){
-        cout << "Lots of food, what do you eat first?" << endl;
-    }, true);
+    Location cafeteria("Cafeteria", "A room with food", []() -> bool{
+        cout << "You need to enter the code. ";
+        string input;
+        getline(cin, input);
+        if (input == "1234") {
+          cout << "The doors open, and you see all the food. What do you eat first?" << endl;
+          return true;
+        } else {
+          cout << "A buzzer sounds. You got it wrong." << endl;
+          return false;
+        }
+    }, false);
     Location library("Library", "Enjoy a good book", [](){
         cout << "Je pense que lire est interessant, mais je ne parle d'anglais donc je ne peux pas parler de ca!!" << endl;
+      return true;
     }, true);
     Location controlroom("Control room", "A room only for the most experienced of astronauts", [](){
         cout << "You look around, and instead of seeing dials and gauges, you see offices. How perculiar." << endl;
+      return true;
     }, true);
     Location maincorridor("Corridor", "A corridor. That's it", [](){
         cout << "Wow. Another corridor...." << endl;
+      return true;
     }, true);
     Location maintenanceshaft("Maintenance shaft", "Used by engineers to access the engines", [](){
         cout << "Dust everywhere. I don't think anyone's been down here for years." << endl;
+      return true;
     }, true);
     Location dorms("Dormitory", "Where people... sleep", [](){
         cout << "Better be quiet here." << endl;
+      return true;
     }, true);
     Location engines("Engine room", "Don't enter without ear protection, trust me.", [](){
         cout << "Should've read the sign." << endl;
+      return true;
     }, true);
 
     Item bat("Bat", "You can swing at things and probably break them.", [&library]() -> bool{
