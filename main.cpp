@@ -21,19 +21,20 @@ int main() {
     Location hub("Hub", "Center room connecting to other parts of the spaceship", []() -> bool {
         cout << "Where to go?" << endl;
         return true;
-    });
-    Location cafeteria("Cafeteria", "A room with food", []() -> bool{
+    },false);
+    Location cafeteria("Cafeteria", "A room with food", [&cafeteria]() -> bool{
         cout << "You need to enter the code. ";
         string input;
         getline(cin, input);
         if (input == "1234") {
           cout << "The doors open, and you see all the food. What do you eat first?" << endl;
+          cafeteria.code_req = false;
           return true;
         } else {
           cout << "A buzzer sounds. You got it wrong." << endl;
           return false;
         }
-    }, false);
+    }, false, 1234);
     Location library("Library", "Enjoy a good book", [](){
         cout << "Je pense que lire est interessant, mais je ne parle d'anglais donc je ne peux pas parler de ca!!" << endl;
       return true;
@@ -45,19 +46,28 @@ int main() {
     Location maincorridor("Corridor", "A corridor. That's it", [](){
         cout << "Wow. Another corridor...." << endl;
       return true;
-    }, true);
+    }, false);
     Location maintenanceshaft("Maintenance shaft", "Used by engineers to access the engines", [](){
         cout << "Dust everywhere. I don't think anyone's been down here for years." << endl;
       return true;
     }, true);
-    Location dorms("Dormitory", "Where people... sleep", [](){
-        cout << "Better be quiet here." << endl;
-      return true;
-    }, true);
+    Location dorms("Dormitory", "Where people... sleep", [&dorms]()-> bool{
+      cout << "You need to enter the code. ";
+      string input;
+      getline(cin, input);
+      if (input == "7891") {
+        cout << "You see people in the beds. Are they sleeping or are they dead?" << endl;
+        dorms.code_req = false;
+        return true;
+      } else {
+        cout << "A hand comes out of the entry box and slaps you. Wake up." << endl;
+        return false;
+      }
+    }, false, 7891);
     Location engines("Engine room", "Don't enter without ear protection, trust me.", [](){
         cout << "Should've read the sign." << endl;
       return true;
-    }, true);
+    }, false);
 
     Item bat("Bat", "You can swing at things and probably break them.", [&library]() -> bool{
         cout << "You look around. You see a door saying 'Library', and you go towards it." << endl;
@@ -111,6 +121,8 @@ int main() {
                 cout << "    - " << loc->name;
                 if (loc->blocked) {
                     cout << " (blocked)";
+                } else if (loc->code_req) {
+                  cout << " (code required)";
                 }
                 cout << endl;
             }

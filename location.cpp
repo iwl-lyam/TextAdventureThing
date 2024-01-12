@@ -15,15 +15,15 @@ using namespace std::this_thread; // sleep_for, sleep_until
 
 using namespace location;
 
-Location::Location(const std::string n, const std::string d) : arrival_set(false), name(n), desc(d) {}
+Location::Location(const std::string n, const std::string d) : arrival_set(false), name(n), desc(d), code_req(false) {}
 Location::Location(const std::string n, const std::string d, std::function<bool()> f)
-            : arrival_set(true), name(n), desc(d), on_arrival(f)  {}
+            : arrival_set(true), name(n), desc(d), on_arrival(f), code_req(false)  {}
 Location::Location(const std::string n, const std::string d, std::function<bool()> f, bool b, float c)
-        : arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b), code(c)  {}
+        : arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b), code(c), code_req(true)  {}
 Location::Location(const std::string n, const std::string d, std::function<bool()> f, bool b)
-: arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b)  {}
+: arrival_set(true), name(n), desc(d), on_arrival(f), blocked(b), code_req(false)  {}
 Location::Location(const std::string n, const std::string d, std::function<bool()> f, float c)
-: arrival_set(true), name(n), desc(d), on_arrival(f), code(c)  {}
+: arrival_set(true), name(n), desc(d), on_arrival(f), code(c), code_req(true)  {}
 
 Location Location::go(const std::string locName) {
     for (Location* loc : children) {
@@ -59,11 +59,11 @@ void Location::block() {
 std::string Location::go(const std::string locName, Location* current) {
     std::string init = current->name;
     for (Location* loc : children) {
-        if ((loc->name == locName && loc->blocked == false)) {
-            
+        if ((loc->name == locName && (loc->blocked == false))) {
             std::cout << "Moving to " + loc->name + "..." << std::endl;
             if (loc->arrival()) {
               sleep_for(1s);
+              loc->unblock();
               *current = *loc;
               return "Successfully moved to "+locName;
             } else {

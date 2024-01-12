@@ -19,6 +19,7 @@ namespace location {
         bool arrival_set;
 
     public:
+        bool code_req;
         std::string name;
         std::string desc;
         std::vector<Location*> children;
