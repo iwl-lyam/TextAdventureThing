@@ -214,7 +214,7 @@ int main() {
     library.add_item(&badbook);
     library.add_item(&cookbook);
 
-    Location current_room = library; //todo reset
+    Location current_room = hub;
     vector<Item> inventory;
 
     bool complete = false;
