@@ -39,9 +39,10 @@ namespace item {
         bool used;
         std::function<bool()> handle;
         vector<string> useable;
+        bool persists;
 
 
-        Item(string n, string d, std::function<bool()> f, vector<string> u);
+        Item(string n, string d, std::function<bool()> f, vector<string> u, bool p);
 
         bool use(location::Location loc);
     };

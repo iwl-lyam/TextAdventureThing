@@ -24,15 +24,18 @@
 using namespace item;
 using namespace std;
 
-Item::Item(string n, string d, function<bool()> f, vector<string> u) {
+Item::Item(string n, string d, function<bool()> f, vector<string> u, bool p) {
     name = std::move(n);
     desc = std::move(d);
+    persists = p;
     handle = f;
     useable = u;
     used = false;
 }
 
 bool Item::use(location::Location loc) {
+    cout << desc << endl;
+
     auto it = std::find(useable.begin(), useable.end(), loc.name);
 
     if (it == useable.end()) {
@@ -40,7 +43,11 @@ bool Item::use(location::Location loc) {
     }
 
     if (handle()) {
-        used = true;
+        if (!persists) {
+            used = true;
+        } else {
+            used = false;
+        }
     }
 
     return true;
@@ -50,7 +57,8 @@ void item::pickUp(std::string n, location::Location l, std::vector<Item>* i) {
     for (Item* loc: l.items) {
         if (loc->name == n) {
             i->emplace_back(*loc);
-            loc->used = true;
+            if (!loc->persists)
+                loc->used = true;
         }
     }
 }
