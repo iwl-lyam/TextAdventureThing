@@ -217,8 +217,6 @@ int main() {
     Location current_room = hub;
     vector<Item> inventory;
 
-    bool complete = false;
-
     while (!complete) {
         cout << "-----------------------------------" << endl;
         if (hunger < 5) cout << "Warning! You are hungry! Go eat." << endl;
