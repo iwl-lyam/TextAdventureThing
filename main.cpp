@@ -101,7 +101,7 @@ int main() {
     }, {"Hub"}, false);
 
     int fuell = 0;
-    Item fuel("Fuel", "Fuel for the engines", [&fuell]() -> bool{
+    Item fuel("Fuel", "10L of fuel for the engines", [&fuell]() -> bool{
         cout << "You need 60 L of fuel in the engines! Current amount: " << fuell << " L." << endl;
         sleep_for(2s);
         fuell += 1;
