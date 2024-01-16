@@ -55,25 +55,32 @@ int main() {
         return true;
     }, true);
 
-    Location maincorridor("Corridor", "A corridor. That's it", [](){
+  Location dorms("Dormitory", "Where people... sleep", [&dorms]()-> bool{
+    cout << "You need to enter the code. ";
+    string input;
+    getline(cin, input);
+    if (input == "7891") {
+      cout << "You see people in the beds. Are they sleeping or are they dead?" << endl;
+      dorms.code_req = false;
+      return true;
+    } else {
+      cout << "A hand comes out of the entry box and slaps you. Wake up." << endl;
+      return false;
+    }
+  }, false, 7891);
+
+    Location maincorridor("Corridor", "A corridor. That's it", [&dorms, &cafeteria](){
         cout << "Wow. Another corridor...." << endl;
+        if (!cafeteria.code_req && dorms.code_req) {
+          cout << "You see a post-it note on the wall saying '7891'" << endl;
+          sleep_for(2s);
+          cout << "Maybe it could be important?" << endl;
+        }
       return true;
     }, false);
 
 
-    Location dorms("Dormitory", "Where people... sleep", [&dorms]()-> bool{
-      cout << "You need to enter the code. ";
-      string input;
-      getline(cin, input);
-      if (input == "7891") {
-        cout << "You see people in the beds. Are they sleeping or are they dead?" << endl;
-        dorms.code_req = false;
-        return true;
-      } else {
-        cout << "A hand comes out of the entry box and slaps you. Wake up." << endl;
-        return false;
-      }
-    }, false, 7891);
+    
 
     Location engines("Engine room", "Don't enter without ear protection, trust me.", [](){
         cout << "Hurry, refuel the engines!" << endl;
@@ -195,6 +202,8 @@ int main() {
     maincorridor.add_loc(&controlroom);
     maincorridor.add_loc(&dorms);
     maincorridor.add_loc(&hub);
+
+    maintenanceshaft.add_item(&fuel);
 
     maintenanceshaft.add_loc(&engines);
     maintenanceshaft.add_loc(&hub);
